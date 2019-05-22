@@ -24,7 +24,7 @@ jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine。
 ## 2.1 jsplumb的设计
 本软件参考了github上的jsworkflow项目，为了满足需求进行了改动。
 
-###2.2 增加lable参数
+### 2.2 增加lable参数
 为使绘制的图形能传递完整信息，需要在绘制的线上增加参数。jsplumb关于lable部分是通过overlays来实现，  
 默认参数下会创建ConnectionOverlays图层，id设置为defaultlabel。  
 ```
@@ -70,9 +70,7 @@ instance.createStateTrasitions = function (workflowData) {
        var conn=instance.connect({
             source: trx["source"],
             target: trx["target"],
-
 						labelStyle: {cssClass: "aLabel",},
-						
 						overlays: [
           	//ConnectionOverlays: [
           	["Label", {
@@ -88,6 +86,120 @@ instance.createStateTrasitions = function (workflowData) {
 导入的和手动绘制的两个图层不一样，在修改和保持时进行了判断。这里对overlay的理解还不是很透彻，或许有更好的
 处理办法。
 
+### 2.3 保存参数设计
+内容用JSON个是存储,transitions下记录了原状态到目的状态，lable记录的中间的触发参数。  
+names记录了所有的状态机变量，positions记录的是所在位置，从文件导入到web页面上使用，在做状态机解释时候不需要。    
+```
+{
+	"transitions": {
+		"tr0": {
+			"source": "idle",
+			"target": "attach",
+			"label": "start"
+		},
+		"tr1": {
+			"source": "attach",
+			"target": "register",
+			"label": "attach_success"
+		},
+		"tr2": {
+			"source": "attach",
+			"target": "callend",
+			"label": "attach_faile"
+		},
+		"tr3": {
+			"source": "attach",
+			"target": "callend",
+			"label": "attach_timeout"
+		},
+		"tr4": {
+			"source": "register",
+			"target": "callend",
+			"label": "register_faile"
+		},
+		"tr5": {
+			"source": "register",
+			"target": "callend",
+			"label": "register_timeout"
+		},
+		"tr6": {
+			"source": "callend",
+			"target": "unregister",
+			"label": "is_need_unregister"
+		},
+		"tr7": {
+			"source": "callend",
+			"target": "unattach",
+			"label": "is_need_unattach"
+		},
+		"tr8": {
+			"source": "unregister",
+			"target": "unattach",
+			"label": "is_need_unattach"
+		},
+		"tr9": {
+			"source": "register",
+			"target": "messagemo",
+			"label": "register_success"
+		},
+		"tr10": {
+			"source": "messagemo",
+			"target": "callend",
+			"label": "message_success"
+		},
+		"tr11": {
+			"source": "messagemo",
+			"target": "callend",
+			"label": "message_faile"
+		},
+		"tr12": {
+			"source": "messagemo",
+			"target": "callend",
+			"label": "message_timeout"
+		}
+	},
+	"names": {
+		"idle": "IDLE",
+		"attach": "ATTACH",
+		"register": "REGISTER",
+		"callend": "CALLEND",
+		"unregister": "UNREGISTER",
+		"unattach": "UNATTACH",
+		"messagemo": "MESSAGEMO"
+	},
+	"positions": {
+		"idle": {
+			"top": 147,
+			"left": 368.90625
+		},
+		"attach": {
+			"top": 263,
+			"left": 305.90625
+		},
+		"register": {
+			"top": 384,
+			"left": 291.90625
+		},
+		"callend": {
+			"top": 303,
+			"left": 954.859375
+		},
+		"unregister": {
+			"top": 473,
+			"left": 896.859375
+		},
+		"unattach": {
+			"top": 581,
+			"left": 1091.859375
+		},
+		"messagemo": {
+			"top": 508,
+			"left": 515.6875
+		}
+	},
+	"container": "workflow-2"
+}
+```
 
 ## 3.1 状态机解释器的设计
 在设计状态机解释器时首先需要掌握状态机的数学模型公式：  
