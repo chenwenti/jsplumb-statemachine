@@ -22,4 +22,4 @@ jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine。
 	
 # 效果图
 
-![](./screenshoot/screenshoot1.png)
+![](/screenshoot/screenshoot1.png)
