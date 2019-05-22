@@ -31,7 +31,7 @@ jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine功能。
 	
 ## 1.4 jsplumb前端效果
 
-DEMO地址：http://www.51pcap.com/callflow 
+<a href="http://www.51pcap.com/callflow" target="_blank">jsplumb效果demo网址</a>
 ![](./screenshoot/screenshoot1.png)
 
 ## 2.1 jsplumb的设计
