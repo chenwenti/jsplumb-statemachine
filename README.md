@@ -10,6 +10,12 @@
 - 通过拖拽的方式实现状态机模型的绘制和连接
 - 能够保存所绘制的模型关系并以文件存储
 - 能够通过绘制的关系正确执行对应的业务流程
+
+本例子中的状态机业务为volte中的呼叫业务，volte中使用SIP协议，在理解业务的时候最好向阅读SIP相关文档，对
+SIP的事务状态机有一定的了解。下图为SIP协议的事务状态机：  
+
+![](./screenshoot/sip.png)
+
 	
 ## 1.2 jsplumb基本介绍	
 
@@ -20,6 +26,9 @@
 
 jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine。
 	
+## 1.4 jsplumb前端效果
+
+![](./screenshoot/screenshoot1.png)
 
 ## 2.1 jsplumb的设计
 本软件参考了github上的jsworkflow项目，为了满足需求进行了改动。
