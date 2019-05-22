@@ -224,4 +224,102 @@ callring,callinit_timeout,callring_timeout,callconnect,calldisconnect..........}
 最终状态F = DEATTACH  
 
 
+## 3.2 状态机解释器的代码demo实现
+为了实现以上的数学定义，使用了python下的transitions来解析。  
+具体介绍可以参考官方文档  https://github.com/pytransitions/transitions  
+
+所有的状态机都需要有定时器处理，因此需要使用transitions的timeout扩展属性  
+
+先定义state变量，假设都超时10秒，超时后执行超时函数并触发超时事件。
+```
+states = [{'name': 'IDLE'},
+          {'name': 'ATTACH','timeout': 10, 'on_timeout':['on_timeout_attach','attach_timeout']},
+          {'name': 'REGISTER', 'timeout': 10, 'on_timeout': ['on_timeout_register','register_timeout']},
+          {'name': 'CALLINIT','timeout': 10, 'on_timeout': ['on_timeout_callinit','callinit_timeout']},
+          {'name': 'CALLRING','timeout': 10, 'on_timeout': ['on_timeout_callring','callring_timeout']},
+          {'name': 'CALLCONNECT','timeout': 10, 'on_timeout': ['on_timeout_callconnect','callconnect_timeout']},
+          {'name': 'CALLDISCONNECT','timeout': 10, 'on_timeout': ['on_timeout_calldisconnect','calldisconnect_timeout']},
+          {'name': 'CALLEND','timeout': 10, 'on_timeout': ['on_timeout_callend']},
+          {'name': 'UNREGISTER','timeout': 10, 'on_timeout': ['on_timeout_unregister','unregister_timeout']},
+          {'name': 'DEATTACH','timeout': 10, 'on_timeout': ['on_timeout_deattach','deattach_timeout']}
+          ]
+```
+
+然后定义触发器，这里可以根据jsplumb编写的json文件自动转换成这两个定义。  
+```
+transitions = [
+    {'trigger': 'start', 'source': 'IDLE', 'dest': 'ATTACH', 'before': 'before_start2attach'},
+    {'trigger': 'attach_success', 'source': 'ATTACH', 'dest': 'REGISTER', 'before': 'before_attach2reg' },
+    {'trigger': 'attach_faile', 'source': 'ATTACH', 'dest': 'CALLEND', 'before': 'before_attach2callend' },
+    {'trigger': 'attach_timeout', 'source': 'ATTACH', 'dest': 'CALLEND', 'before': 'before_attach2callend' },
+    {'trigger': 'register_success', 'source': 'REGISTER', 'dest': 'CALLINIT', 'before': 'before_reg2callinit' },
+    {'trigger': 'register_faile', 'source': 'REGISTER', 'dest': 'CALLEND', 'before': 'before_reg2callend' },
+    {'trigger': 'register_timeout', 'source': 'REGISTER', 'dest': 'CALLEND', 'before': 'before_reg2callend' },
+    {'trigger': 'callring', 'source': 'CALLINIT', 'dest': 'CALLRING', 'before': 'before_reg2callinit'},
+    {'trigger': 'callinit_timeout', 'source': 'CALLINIT', 'dest': 'CALLEND', 'before': 'before_reg2callend'},
+    {'trigger': 'callring_timeout', 'source': 'CALLRING', 'dest': 'CALLEND', 'before': 'before_callring2callend'},
+    {'trigger': 'callconnect', 'source': 'CALLRING', 'dest': 'CALLCONNECT', 'before': 'before_reg2callend'},
+    {'trigger': 'calldisconnect', 'source': 'CALLRING', 'dest': 'CALLDISCONNECT', 'before': 'before_callring2calldisconnect'},
+    {'trigger': 'calldisconnect', 'source': 'CALLCONNECT', 'dest': 'CALLDISCONNECT', 'before': 'before_callconnect2calldisconnect'},
+    {'trigger': 'callconnect_timeout', 'source': 'CALLCONNECT', 'dest': 'CALLCONNECT', 'before': 'timeout2handup'},
+    {'trigger': 'callend_timeout', 'source': 'CALLEND', 'dest': 'CALLEND', 'before': 'before_reg2callend'},
+]
+```
+
+实现类函数  
+
+```
+from time import sleep
+from transitions import Machine
+from transitions.extensions.states import add_state_features, Tags, Timeout
+import threading
+from queue import Queue
+from threading import *
+
+@add_state_features(Tags, Timeout)
+class JsExtenStateMachine(Machine):
+    pass
+
+class VolteCallStateMachine(object):
+    def __init__(self):
+        self.entourage = 0
+
+    #超时处理函数
+    def on_enter_waiting(self):
+        self.entourage += 1
+
+    def on_timeout_attach(self):
+        print ("on_timeout_attach dosomthing")
+
+    def on_timeout_register(self):
+        print ("on_timeoute_register do something")		
+        
+		....
+		实现每个函数功能
+		
+```
+
+例子函数中做了两个队列，一个模拟输入事件，一个取出事件，因为事件都是字符串，因此需要需要转换成
+函数处理，使用了getattr函数。  
+
+```
+# 从队列中取出事件并执行到最终的状态
+def geteventsfromqueue():
+
+    sleep(2)
+    print("start geteventsfromqueue")
+
+    while(1):
+       print(q.qsize())
+       event = q.get()
+       print ('recv event = '+event)
+       func = getattr(volte401,event, None)
+       func()
+       print("now state=" + volte401.state)
+       sleep(3)
+
+```
+
+
+
 ## 4.1 可改进部分
