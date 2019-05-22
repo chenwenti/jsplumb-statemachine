@@ -16,6 +16,9 @@ SIP的事务状态机有一定的了解。下图为SIP协议的事务状态机：
 
 ![](./screenshoot/sip.png)
 
+在实际例中按照使用者对电话的理解将状态机抽象成CALLINIT(准备呼叫)、CALLRING(振铃状态)、CALLCONNECT(摘机状态)、CALLDISCONNECT(挂机状态)、
+CALLEND(呼叫结束状态)。这几个状态对普通电话也适用，针对手机增加了ATTACH(附着状态)、针对VOLTE增加了REGISTER(SIP注册状态)，对应也增加了DEATTCH(去附着状态)和
+UNREGISTER(注销状态)。
 	
 ## 1.2 jsplumb基本介绍	
 
@@ -24,14 +27,16 @@ SIP的事务状态机有一定的了解。下图为SIP协议的事务状态机：
 	
 ## 1.3 jsplumb的状态机模型
 
-jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine。
+jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine功能。
 	
 ## 1.4 jsplumb前端效果
 
+DEMO地址：http://www.51pcap.com/callflow
 ![](./screenshoot/screenshoot1.png)
 
 ## 2.1 jsplumb的设计
-本软件参考了github上的jsworkflow项目，为了满足需求进行了改动。
+本demo参考了github上的jsworkflow项目，为了满足需求进行了改动。
+增加了lable参数，增加了保存、导入、清除、拖拽功能，对存储的结构按需要进行优化。
 
 ### 2.2 增加lable参数
 为使绘制的图形能传递完整信息，需要在绘制的线上增加参数。jsplumb关于lable部分是通过overlays来实现，  
@@ -329,6 +334,19 @@ def geteventsfromqueue():
 
 ```
 
+## 3.3 测试代码运行
+
+python3.6  
+安装transitions后直接运行  
 
 
 ## 4.1 可改进部分
+
+lable参数可设计数据格式，增加比如timeout时长，条件等。  
+例子可以设计成 项2= 参数1，项目2=参数2  
+如fun=xxxx,timer=10表示执行什么函数，超时时长多少。  
+
+lable中的参数是输入的，可以设计成下拉方式被选择，减少输入时的错误。  
+
+本例中用的transitions在实际项目中的性能存在疑问，使用transitions只是鉴于好理解状态机的设计模式，在设计
+使用中比如用于sip状态机模型对定时器的要求很高，很多定时器要求需要达到200ms或以下，目前的秒级定时器无法满足要求。
