@@ -41,7 +41,7 @@ git clone https://github.com/chenwenti/jsplumb-statemachine.git
 用浏览器直接打开static下的callflowDemo.html页面(注意：低版本IE浏览器不支持)
 
 方式三：在flask下预览
-下载源码后安装flask库，运行CallflowFlaskDemo.py预览
+下载源码后安装flask库，运行CallflowFlaskDemo.py预览.
 
 ## 2.1 jsplumb的设计
 本demo参考了github上的jsworkflow项目，为了满足需求进行了改动。
