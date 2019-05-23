@@ -31,17 +31,17 @@ jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine功能。
 	
 ## 1.4 jsplumb前端效果
 
-方式一：在线预览
-<a href="http://www.51pcap.com/callflow" target="_blank">jsplumb效果demo网址</a>
+方式一：在线预览  
+<a href="http://www.51pcap.com/callflow" target="_blank">jsplumb效果demo网址</a>  
 
 ![](./screenshoot/screenshoot1.png)
 
-方式二：本地预览
-git clone https://github.com/chenwenti/jsplumb-statemachine.git
-用浏览器直接打开static下的callflowDemo.html页面(注意：低版本IE浏览器不支持)
+方式二：本地预览  
+git clone https://github.com/chenwenti/jsplumb-statemachine.git  
+用浏览器直接打开static下的callflowDemo.html页面(注意：低版本IE浏览器不支持)     
 
-方式三：在flask下预览
-下载源码后安装flask库，运行CallflowFlaskDemo.py预览.
+方式三：在flask下预览  
+下载源码后安装flask库，运行CallflowFlaskDemo.py预览.  
 
 ## 2.1 jsplumb的设计
 本demo参考了github上的jsworkflow项目，为了满足需求进行了改动。
