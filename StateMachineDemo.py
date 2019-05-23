@@ -75,8 +75,8 @@ class VolteCallStateMachine(object):
 
     def timeout2handup(self):
         #产生一个挂机事件
-        q.put('disconnect')
-        print("timeout2handup ")
+        q.put('calldisconnect')
+        print("timeout2handup,lanch a evet calldisconnect")
 
     def before_callconnect2callend(self):
         print ("before_callconnect2callend do something")
@@ -86,7 +86,10 @@ class VolteCallStateMachine(object):
 
     def before_calldisconnect2callend(self):
         print ("before_calldisconnect2callend do something")
+        print ("is register or is attach")
 
+    def before_callenddeatach(self):
+        print ("before_callenddeatach do something")
 
 states = [{'name': 'IDLE'},
           {'name': 'ATTACH','timeout': 10, 'on_timeout':['on_timeout_attach','attach_timeout']},
@@ -122,7 +125,9 @@ transitions = [
     {'trigger': 'calldisconnect', 'source': 'CALLCONNECT', 'dest': 'CALLDISCONNECT', 'before': 'before_callconnect2calldisconnect'},
     {'trigger': 'callconnect_timeout', 'source': 'CALLCONNECT', 'dest': 'CALLCONNECT', 'before': 'timeout2handup'},
 
-    {'trigger': 'callend_timeout', 'source': 'CALLEND', 'dest': 'CALLEND', 'before': 'before_reg2callend'},
+    {'trigger': 'calldisconnect_timeout', 'source': 'CALLDISCONNECT', 'dest': 'CALLEND', 'before': 'before_callconnect2callend'},
+
+    {'trigger': 'callend_timeout', 'source': 'CALLEND', 'dest': 'DEATTACH', 'before': 'before_callend2deattach'},
 ]
 
 
@@ -131,7 +136,7 @@ machine = JsExtenStateMachine(model=volte401, states=states, transitions=transit
 
 q = Queue()
 
-eventdemo = ['start','attach_faile','register_success','callring','callconnect']
+eventdemo = ['start','attach_success','register_success','callring','callconnect']
 
 # 假设有一消息队列，按一定时间插入消息
 def putevents2queue():
