@@ -31,8 +31,17 @@ jsplumb支持多种图形绘制，此处只是用了jsplumb的 statemathine功能。
 	
 ## 1.4 jsplumb前端效果
 
+方式一：在线预览
 <a href="http://www.51pcap.com/callflow" target="_blank">jsplumb效果demo网址</a>
+
 ![](./screenshoot/screenshoot1.png)
+
+方式二：本地预览
+git clone https://github.com/chenwenti/jsplumb-statemachine.git
+用浏览器直接打开static下的callflowDemo.html页面(注意：低版本IE浏览器不支持)
+
+方式三：在flask下预览
+下载源码后安装flask库，运行CallflowFlaskDemo.py预览
 
 ## 2.1 jsplumb的设计
 本demo参考了github上的jsworkflow项目，为了满足需求进行了改动。
@@ -84,8 +93,8 @@ instance.createStateTrasitions = function (workflowData) {
        var conn=instance.connect({
             source: trx["source"],
             target: trx["target"],
-						labelStyle: {cssClass: "aLabel",},
-						overlays: [
+			labelStyle: {cssClass: "aLabel",},
+			overlays: [
           	//ConnectionOverlays: [
           	["Label", {
                   cssClass: "aLabel",
@@ -239,7 +248,7 @@ callring,callinit_timeout,callring_timeout,callconnect,calldisconnect..........}
 
 
 ## 3.2 状态机解释器的代码demo实现
-为了实现以上的数学定义，使用了python下的transitions来解析。  
+为了实现以上的数学模型，选择使用了python下的transitions库来解析。
 具体介绍可以参考官方文档  https://github.com/pytransitions/transitions  
 
 所有的状态机都需要有定时器处理，因此需要使用transitions的timeout扩展属性  
@@ -342,11 +351,11 @@ python3.6
 
 ## 4.1 可改进部分
 
-lable参数可设计数据格式，增加比如timeout时长，条件等。  
+1.lable参数可设计数据格式，增加比如timeout时长，条件等。
 例子可以设计成 项2= 参数1，项目2=参数2  
 如fun=xxxx,timer=10表示执行什么函数，超时时长多少。  
 
-lable中的参数是输入的，可以设计成下拉方式被选择，减少输入时的错误。
+2.lable中的参数是输入的，可以设计成下拉方式被选择，减少输入时的错误。
 
-本例中用的transitions在实际项目中的性能存在疑问，使用transitions只是鉴于好理解状态机的设计模式，在设计
+3.本例中用的transitions在实际项目中的性能存在疑问，使用transitions只是鉴于好理解状态机的设计模式，在设计
 使用中比如用于sip状态机模型对定时器的要求很高，很多定时器要求需要达到200ms或以下，目前的秒级定时器无法满足要求。
