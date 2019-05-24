@@ -110,7 +110,7 @@ instance.createStateTrasitions = function (workflowData) {
 处理办法。
 
 ### 2.3 保存参数设计
-内容用JSON个是存储,transitions下记录了原状态到目的状态，lable记录的中间的触发参数。  
+内容用JSON格式存储，transitions下记录了原状态到目的状态，lable记录的中间的触发参数。
 names记录了所有的状态机变量，positions记录的是所在位置，从文件导入到web页面上使用，在做状态机解释时候不需要。    
 ```
 {
@@ -233,6 +233,7 @@ Q={q0,q1,...,qn}是有限状态集合。在任一确定的时刻，有限状态机只能处于一个确定的状
 q0∈Q是初始状态，有限状态机由此状态开始接收输入；  
 F∈Q是最终状态集合，有限状态机在达到终态后不再接收输入。  
 
+因此我们在设计状态机软件模型的时候主要是要抽象归纳业务模型，套用公式。
 在本例中状态机的的状态Q设计为  
 Q={IDLE,ATTACH,REGISTER,CALLINIT,CALLRING,CALLCONNECT,CALLDISCONNECT,CALLEND,UNREGISTER,DEATTACH};  
 
@@ -248,7 +249,7 @@ callring,callinit_timeout,callring_timeout,callconnect,calldisconnect..........}
 
 
 ## 3.2 状态机解释器的代码demo实现
-为了实现以上的数学模型，选择使用了python下的transitions库来解析。
+为了实现以上的数学模型，选择使用了python下的transitions库来解析，实现demo。
 具体介绍可以参考官方文档  https://github.com/pytransitions/transitions  
 
 所有的状态机都需要有定时器处理，因此需要使用transitions的timeout扩展属性  
